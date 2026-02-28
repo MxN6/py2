@@ -1,5 +1,4 @@
 import json
-
 # -----------------------
 # 1. Convert Python to JSON
 # -----------------------
@@ -26,6 +25,15 @@ print("Parsed Name:", parsed_data["name"])
 # 3. Practice
 # -----------------------
 
-with open("sample_data.json", "r") as file:
+with open('Practice4/sample_data.json', "r") as file:
     data = json.load(file)
-print(data)
+
+root = data["imdata"]
+print("Interface Status\n"
+"================================================================================\n"
+"DN                                                 Description           Speed    MTU  \n"
+"-------------------------------------------------- --------------------  ------  ------\n")
+
+for datas in root:
+    path = datas["l1PhysIf"]["attributes"]
+    print(f"{path["dn"]:<50}", f"{path.get("descr"):<20}", "", f"{path["speed"]:<6}", "", f"{path["mtu"]:<6}")
