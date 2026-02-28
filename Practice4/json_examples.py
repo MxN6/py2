@@ -21,3 +21,11 @@ print(json_string)
 
 parsed_data = json.loads(json_string)
 print("Parsed Name:", parsed_data["name"])
+
+# -----------------------
+# 3. Practice
+# -----------------------
+
+with open("sample_data.json", "r") as file:
+    data = json.load(file)
+print(data)

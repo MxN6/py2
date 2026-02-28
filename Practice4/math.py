@@ -44,3 +44,28 @@ numbers = [1, 2, 3, 4, 5]
 
 result = random.sample(numbers, 3)
 print(result)
+
+# -----------------------
+# 5. Practice
+# -----------------------
+
+#Write a Python program to convert degree to radian.
+degree = 5
+radians = math.radians(degree)
+print(f"deg: {degree}, rad:{radians}")
+
+#Write a Python program to calculate the area of a trapezoid.
+height = 5
+upbase = 5
+downbase = 6
+print(height * (upbase + downbase)/2 )
+
+#Write a Python program to calculate the area of regular polygon.
+sides = 6
+PolyLen = 25
+print((sides * math.pow(PolyLen, 2)) / (4 * math.tan(math.pi/sides)))
+
+#Write a Python program to calculate the area of a parallelogram.
+height = 7
+base = 3
+print(height * base)
