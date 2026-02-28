@@ -35,3 +35,12 @@ print("Random choice:", random.choice(["apple", "banana", "cherry"]))
 items = [1, 2, 3, 4, 5]
 random.shuffle(items)
 print("Shuffled list:", items)
+
+# -----------------------
+# 4. random sample
+# -----------------------
+
+numbers = [1, 2, 3, 4, 5]
+
+result = random.sample(numbers, 3)
+print(result)
