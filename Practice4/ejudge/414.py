@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import sys
 
 def parse_line(line):
     date_part, tz_part = line.split()
