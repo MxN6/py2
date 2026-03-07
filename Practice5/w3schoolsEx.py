@@ -10,4 +10,4 @@ x = re.search('\s', txt) # match whitespace occurence
 print(x.start()) # "T-h-e- " 0-1-2-3: The output is 3
 
 x = re.search('b', txt) # match 'b' occurence
-print(x) # No 'b' in txt, output None, x is not <Match> object
+print(x) # No 'b' in txt, output (return value) None, x is not <Match> object
