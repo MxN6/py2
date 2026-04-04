@@ -1,4 +1,4 @@
-# Programming principles 2 Practices from W3Schools
+# Programming principles 2
 
 This is README file that explains and **also** my __practice ground__ to explore md syntax
 
