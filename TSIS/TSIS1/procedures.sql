@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE upsert_contact(
+﻿CREATE OR REPLACE PROCEDURE upsert_contact(
     p_first_name VARCHAR,
     p_last_name VARCHAR,
     p_phone VARCHAR,
@@ -13,10 +13,9 @@ BEGIN
 
     IF v_contact_id IS NOT NULL THEN
         UPDATE contacts SET email = p_email WHERE id = v_contact_id;
-        
         INSERT INTO phones (contact_id, phone, type)
         VALUES (v_contact_id, p_phone, 'mobile')
-        ON CONFLICT (contact_id, phone) DO NOTHING;
+        ON CONFLICT (phone) DO NOTHING;
     ELSE
         INSERT INTO contacts(first_name, last_name, email)
         VALUES (p_first_name, p_last_name, p_email)
@@ -43,9 +42,10 @@ DECLARE
     v_id INT;
 BEGIN
     SELECT id INTO v_id FROM contacts WHERE first_name = p_contact_name;
-    
     IF v_id IS NOT NULL THEN
-        INSERT INTO phones (contact_id, phone, type) VALUES (v_id, p_phone, p_type);
+        INSERT INTO phones (contact_id, phone, type)
+        VALUES (v_id, p_phone, p_type)
+        ON CONFLICT (phone) DO NOTHING;
     ELSE
         RAISE NOTICE 'Contact % not found.', p_contact_name;
     END IF;
@@ -59,7 +59,62 @@ DECLARE
 BEGIN
     INSERT INTO groups (name) VALUES (p_group_name) ON CONFLICT (name) DO NOTHING;
     SELECT id INTO v_group_id FROM groups WHERE name = p_group_name;
-    
     UPDATE contacts SET group_id = v_group_id WHERE first_name = p_contact_name;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION search_contacts(p_query TEXT)
+RETURNS TABLE (
+    contact_id INT,
+    first_name VARCHAR,
+    last_name VARCHAR,
+    email VARCHAR,
+    phone_numbers TEXT,
+    group_name VARCHAR
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id,
+        c.first_name,
+        c.last_name,
+        c.email,
+        STRING_AGG(p.phone || ' (' || p.type || ')', ', ') AS phone_numbers,
+        g.name
+    FROM contacts c
+    LEFT JOIN phones p ON c.id = p.contact_id
+    LEFT JOIN groups g ON c.group_id = g.id
+    WHERE c.first_name ILIKE '%' || p_query || '%'
+       OR c.last_name  ILIKE '%' || p_query || '%'
+       OR c.email      ILIKE '%' || p_query || '%'
+       OR p.phone      ILIKE '%' || p_query || '%'
+    GROUP BY c.id, g.name;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_contacts_paginated(limit_val INT, offset_val INT)
+RETURNS TABLE (
+    id INT,
+    first_name VARCHAR,
+    last_name VARCHAR,
+    email VARCHAR,
+    birthday DATE,
+    group_name VARCHAR
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id, 
+        c.first_name, 
+        c.last_name, 
+        c.email, 
+        c.birthday,
+        g.name
+    FROM contacts c
+    LEFT JOIN groups g ON c.group_id = g.id
+    ORDER BY c.first_name ASC, c.last_name ASC
+    LIMIT limit_val OFFSET offset_val;
 END;
 $$ LANGUAGE plpgsql;

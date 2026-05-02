@@ -1,5 +1,5 @@
-first_name,last_name,email,birthday,group_id
-Lora,Craft,rninecraft@gmail.com,20.01.2001,3
-Bald,Eagle,america@gov.uk,04.07.1775,2
-Legal,Illegal,twosides@outlook.com,01.10.2010,1
-Wuiss,Dith,idk@email.kz,02.05.2026,4
+﻿first_name,last_name,email,birthday,group,phone,type
+Lora,Craft,rninecraft@gmail.com,20.01.2001,Friend,555-0101,mobile
+Bald,Eagle,america@gov.uk,04.07.1775,Work,555-0112,work
+Legal,Illegal,twosides@outlook.com,01.10.2010,Family,555-0199,home
+Wuiss,Dith,idk@email.kz,02.05.2026,Other,555-0123,mobile
