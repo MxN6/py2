@@ -453,8 +453,6 @@ def main():
                     if sound_btn.is_clicked(pos):
                         settings["sound"] = not settings.get("sound", True)
                         save_settings(settings)
-                        if session:
-                            pass
                     for button in color_buttons:
                         if button.is_clicked(pos):
                             chosen = button.text.lower()

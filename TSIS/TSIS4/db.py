@@ -1,17 +1,11 @@
 import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
 
 DB_AVAILABLE = True
 
 try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
-except ImportError:
-    DB_AVAILABLE = False
-    psycopg2 = None
-    RealDictCursor = None
-
-if DB_AVAILABLE:
     def get_connection():
         return psycopg2.connect(
             host=DB_HOST,
@@ -39,7 +33,7 @@ if DB_AVAILABLE:
                     );
                     """
                 )
-            conn.commit()
+                conn.commit()
 
     def get_player_id(username):
         with get_connection() as conn:
@@ -49,8 +43,8 @@ if DB_AVAILABLE:
                     (username,),
                 )
                 player_id = cur.fetchone()[0]
-            conn.commit()
-            return player_id
+                conn.commit()
+                return player_id
 
     def save_game_session(username, score, level):
         player_id = get_player_id(username)
@@ -60,7 +54,7 @@ if DB_AVAILABLE:
                     "INSERT INTO game_sessions (player_id, score, level_reached) VALUES (%s, %s, %s);",
                     (player_id, score, level),
                 )
-            conn.commit()
+                conn.commit()
 
     def fetch_leaderboard(limit=10):
         with get_connection() as conn:
@@ -85,16 +79,6 @@ if DB_AVAILABLE:
                 result = cur.fetchone()[0]
                 return result if result is not None else 0
 
-    try:
-        ensure_tables()
-    except Exception:
-        DB_AVAILABLE = False
-else:
-    def save_game_session(username, score, level):
-        pass
-
-    def fetch_leaderboard(limit=10):
-        return []
-
-    def fetch_personal_best(username):
-        return 0
+    ensure_tables()
+except Exception:
+    DB_AVAILABLE = False
